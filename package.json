@@ -1,0 +1,55 @@
+{
+  "name": "visual-html",
+  "description": "Visual regression testing without the flakiness.",
+  "version": "1.0.0",
+  "author": "Dylan Piercey <dpiercey@ebay.com>",
+  "bugs": "https://github.com/eBay/visual-html/issues",
+  "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.2",
+    "coveralls": "^3.0.6",
+    "husky": "^3.0.4",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.2.3",
+    "prettier": "^1.18.2",
+    "snapshot-diff": "^0.5.2",
+    "standard-version": "^7.0.0",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/eBay/visual-html",
+  "keywords": [
+    "visual",
+    "regression",
+    "computed",
+    "styles"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eBay/visual-html"
+  },
+  "scripts": {
+    "build": "tsc",
+    "ci:report": "cat coverage/lcov.info | coveralls",
+    "ci:test": "jest --ci --coverage",
+    "format": "prettier \"**/*.{json,md,js,ts}\" --write",
+    "lint": "tsc --noEmit && tslint -t codeFrame -c tslint.json 'src/**/*.ts'",
+    "release": "standard-version",
+    "test": "jest -o",
+    "test:watch": "jest -o --watch"
+  },
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "indent-string": "^4.0.0",
+    "specificity": "^0.4.1"
+  }
+}
