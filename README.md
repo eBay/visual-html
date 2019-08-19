@@ -221,3 +221,9 @@ as the element is still ultimately displayed the same, your snapshot will contin
 ## Code of Conduct
 
 This project adheres to the [eBay Code of Conduct](http://ebay.github.io/codeofconduct). By participating in this project you agree to abide by its terms.
+
+## License
+Copyright 2019 eBay Inc. 
+Author/Developer: Dylan Piercey, Michael Rawlings
+
+Use of this source code is governed by an MIT-style license that can be found in the LICENSE file or at https://opensource.org/licenses/MIT.
