@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "author": "Dylan Piercey <dpiercey@ebay.com>",
   "bugs": "https://github.com/eBay/visual-html/issues",
+  "dependencies": {
+    "indent-string": "^4.0.0",
+    "specificity": "^0.4.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
@@ -26,10 +30,10 @@
   ],
   "homepage": "https://github.com/eBay/visual-html",
   "keywords": [
-    "visual",
-    "regression",
     "computed",
-    "styles"
+    "regression",
+    "styles",
+    "visual"
   ],
   "license": "MIT",
   "main": "dist/index.js",
@@ -43,13 +47,10 @@
     "ci:test": "jest --ci --coverage",
     "format": "prettier \"**/*.{json,md,js,ts}\" --write",
     "lint": "tsc --noEmit && tslint -t codeFrame -c tslint.json 'src/**/*.ts'",
+    "prepublishOnly": "npm run build",
     "release": "standard-version",
     "test": "jest -o",
     "test:watch": "jest -o --watch"
   },
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "indent-string": "^4.0.0",
-    "specificity": "^0.4.1"
-  }
+  "types": "dist/index.d.ts"
 }
