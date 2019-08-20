@@ -6,7 +6,7 @@ declare global {
 
 export interface VisualData {
   tagName: string;
-  attributes: Array<{ name: string; value: string }> | null;
+  attributes: Array<{ name: string; value: string | boolean | null }> | null;
   styles: { [x: string]: string } | null;
   pseudoStyles: { [x: string]: { [x: string]: string } } | null;
   children: Array<VisualData | string> | null;
