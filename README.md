@@ -66,7 +66,7 @@ visualHTML(document.body, { shallow: true }); // Returns just visual information
 ## How it works
 
 `visual-html` works by building up an HTML representation of the DOM including only attributes that account for the visual display of the element.
-It will scan through all style sheets and inline the applied styles for an element, and strip any attributes that do not come with user agent styles.
+It will scan through all style sheets and inline the applied styles for an element. Then it reads all properties that change the visuals of the element and includes the corresponding attribute in the HTML snapshot.
 
 Lets look at an example.
 
@@ -120,14 +120,12 @@ visualHTML(div); // Returns the html below as string.
 ```
 
 ```html
-<div
-  style="
-  transform: translateX(-100px);
-  width: 100px;
+<div style="
+  background: red;
   height: 200px;
-  background: red
-"
->
+  transform: translateX(-100px);
+  width: 100px
+">
   <span style="color: #333">
     Hello!
   </span>
@@ -138,7 +136,7 @@ visualHTML(div); // Returns the html below as string.
     </label>
     <label>
       Password:
-      <input />
+      <input type="password"/>
     </label>
     <label>
       Remember Me:
@@ -151,7 +149,7 @@ visualHTML(div); // Returns the html below as string.
 </div>
 ```
 
-In the above output you can see that the majority of attributes have been removed, and styles are now included inline. The `type="checkbox"` is still present on the `Remember Me:` checkbox as it causes the browser to display the textbox differently. The default `type` for an `input` is `text`, and a `type="password"` is visually identical to `type="text"` unless you've styled it differently yourself in which case an inline style attribute would be present.
+In the above output you can see that the majority of attributes have been removed, and styles are now included inline. The `type="text"` on the first `input` was removed since it is a default. All attributes and properties are also sorted alphabetically to be more stable.
 
 ## How is this different than x!?
 

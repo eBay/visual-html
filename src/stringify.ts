@@ -37,7 +37,10 @@ function printAttributes(data: VisualData) {
 
   if (attributes) {
     for (const { name, value } of attributes) {
-      parts.push(name + (value === "" ? "" : `=${JSON.stringify(value)}`));
+      parts.push(
+        name +
+          (value === true || value === "" ? "" : `=${JSON.stringify(value)}`)
+      );
     }
   }
 
@@ -45,7 +48,7 @@ function printAttributes(data: VisualData) {
     parts.push(printStyle(data));
   }
 
-  return parts;
+  return parts.sort();
 }
 
 function printStyle({ styles }: VisualData) {
@@ -71,6 +74,7 @@ function printPseudoElements(data: VisualData) {
   }
 
   return `<style scoped>\n${Object.keys(pseudoStyles)
+    .sort()
     .map(name =>
       indent(
         `${name} {${printProperties(pseudoStyles[name])}}`,
@@ -90,5 +94,5 @@ function printProperties(styles: { [x: string]: string }) {
 
   return parts.length === 1
     ? parts[0]
-    : `\n${indent(parts.join(";\n"), 1, indentOptions)}\n`;
+    : `\n${indent(parts.sort().join(";\n"), 1, indentOptions)}\n`;
 }

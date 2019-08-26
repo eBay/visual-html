@@ -23,7 +23,7 @@ afterEach(() => {
 test("removes any properties that do not apply user agent styles", () => {
   expect(
     testHTML(`
-      <input type="text" class="other"/>
+      <input type="text" class="other" checked/>
     `)
   ).toMatchInlineSnapshot(`"<input/>"`);
 });
@@ -31,9 +31,14 @@ test("removes any properties that do not apply user agent styles", () => {
 test("preserves any properties that do apply user agent styles", () => {
   expect(
     testHTML(`
-      <input type="search" class="other"/>
+      <input type="checkbox" class="other" checked/>
     `)
-  ).toMatchInlineSnapshot(`"<input type=\\"search\\"/>"`);
+  ).toMatchInlineSnapshot(`
+    "<input
+      checked
+      type=\\"checkbox\\"
+    />"
+  `);
 });
 
 test("preserves any inline styles", () => {
@@ -58,11 +63,11 @@ test("inline styles override applied styles", () => {
       `
     )
   ).toMatchInlineSnapshot(`
-        "<div style=\\"
-          color: green;
-          background: red
-        \\"/>"
-    `);
+    "<div style=\\"
+      background: red;
+      color: green
+    \\"/>"
+  `);
 });
 
 test("accounts for !important", () => {
@@ -80,8 +85,8 @@ test("accounts for !important", () => {
     )
   ).toMatchInlineSnapshot(`
     "<div style=\\"
-      color: green !important;
-      background: blue !important
+      background: blue !important;
+      color: green !important
     \\"/>"
   `);
 });
@@ -135,12 +140,12 @@ test("supports multiple applied styles", () => {
       `
     )
   ).toMatchInlineSnapshot(`
-            "<div style=\\"
-              color: blue;
-              background-color: red;
-              font-size: 1rem
-            \\"/>"
-      `);
+    "<div style=\\"
+      background-color: red;
+      color: blue;
+      font-size: 1rem
+    \\"/>"
+  `);
 });
 
 test("includes children", () => {
@@ -275,22 +280,22 @@ test("includes pseudo elements", () => {
   `;
 
   expect(testHTML(html, styles)).toMatchInlineSnapshot(`
-                    "<div>
-                      <style scoped>
-                        ::selection {background: red}
-                        ::after {
-                          content: \\"hello\\";
-                          color: green
-                        }
-                      </style>
-                      <span>
-                        <style scoped>
-                          ::selection {background: blue}
-                        </style>
-                        Content
-                      </span>
-                    </div>"
-          `);
+    "<div>
+      <style scoped>
+        ::after {
+          color: green;
+          content: \\"hello\\"
+        }
+        ::selection {background: red}
+      </style>
+      <span>
+        <style scoped>
+          ::selection {background: blue}
+        </style>
+        Content
+      </span>
+    </div>"
+  `);
 });
 
 function testHTML(html: string, styles: string = "") {

@@ -44,34 +44,34 @@ test("runs the first example", () => {
     `
     )
   ).toMatchInlineSnapshot(`
-        "<div style=\\"
-          transform: translateX(-100px);
-          width: 100px;
-          height: 200px;
-          background: red
-        \\">
-          <span style=\\"color: #333\\">
-            Hello!
-          </span>
-          <form>
-            <label>
-              Username:
-              <input/>
-            </label>
-            <label>
-              Password:
-              <input/>
-            </label>
-            <label>
-              Remember Me:
-              <input type=\\"checkbox\\"/>
-            </label>
-            <button>
-              Sign in
-            </button>
-          </form>
-        </div>"
-    `);
+    "<div style=\\"
+      background: red;
+      height: 200px;
+      transform: translateX(-100px);
+      width: 100px
+    \\">
+      <span style=\\"color: #333\\">
+        Hello!
+      </span>
+      <form>
+        <label>
+          Username:
+          <input/>
+        </label>
+        <label>
+          Password:
+          <input type=\\"password\\"/>
+        </label>
+        <label>
+          Remember Me:
+          <input type=\\"checkbox\\"/>
+        </label>
+        <button>
+          Sign in
+        </button>
+      </form>
+    </div>"
+  `);
 });
 
 test("works with diff snapshots", () => {

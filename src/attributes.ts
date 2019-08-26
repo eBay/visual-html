@@ -1,68 +1,54 @@
-let FRAME: HTMLIFrameElement | null = null;
+import { HTML_PROPERTIES } from "./html-properties";
 
 /**
  * Given an element, returns any attributes that have a cause a visual change.
- * This works by copying the element to an iframe without any styles and
- * testing the computed styles while toggling the attributes.
+ * This works by checking against a whitelist of known visual properties, and
+ * their related attribute name.
  */
 export function getVisualAttributes(el: Element) {
-  let visualAttributes: Array<{ name: string; value: string }> | null = null;
-  const document = el.ownerDocument!;
-  FRAME = FRAME || document.createElement("iframe");
+  let visualAttributes: Array<{
+    name: string;
+    value: string | boolean | null;
+  }> | null = null;
+  if (!el.namespaceURI || el.namespaceURI === "http://www.w3.org/1999/xhtml") {
+    // For HTML elements we look at a whitelist of properties and compare against the default value.
+    const defaults = el.ownerDocument!.createElement(el.localName);
 
-  document.body.appendChild(FRAME);
+    for (const prop in HTML_PROPERTIES) {
+      const { alias, tests } = HTML_PROPERTIES[
+        prop as keyof typeof HTML_PROPERTIES
+      ];
+      const name = alias || prop;
+      const value = el[prop];
 
-  const contentDocument = FRAME.contentDocument!;
-  const contentWindow = contentDocument.defaultView!;
-  const clone = contentDocument.importNode(el, false);
-  const { attributes } = clone;
-
-  contentDocument.body.appendChild(clone);
-
-  const defaultStyles = contentWindow.getComputedStyle(clone);
-
-  for (let i = attributes.length; i--; ) {
-    const attr = attributes[i];
-
-    if (attr.name === "style") {
-      continue;
+      if (value !== defaults[prop]) {
+        for (const test of tests) {
+          if (test(el)) {
+            (visualAttributes || (visualAttributes = [])).push({ name, value });
+            break;
+          }
+        }
+      }
     }
+  } else {
+    // For other namespaces we assume all attributes are visual, except for a blacklist.
+    const { attributes } = el;
 
-    clone.removeAttributeNode(attr);
+    for (let i = 0, len = attributes.length; i < len; i++) {
+      const { name, value } = attributes[i];
 
-    if (
-      !computedStylesEqual(defaultStyles, contentWindow.getComputedStyle(clone))
-    ) {
-      (visualAttributes || (visualAttributes = [])).push({
-        name: attr.name,
-        value: attr.value
-      });
+      if (
+        !(
+          (el.localName === "a" && /^(?:xmlns:)?href$/i.test(name)) ||
+          /^(?:class|id|style|lang|target|xmlns(?::.+)?|xlink:(?!href).+|xml:(?:lang|base)|on*|aria-*|data-*)$/i.test(
+            name
+          )
+        )
+      ) {
+        (visualAttributes || (visualAttributes = [])).push({ name, value });
+      }
     }
-
-    clone.setAttributeNode(attr);
   }
-
-  contentDocument.body.removeChild(clone);
-  document.body.removeChild(FRAME);
 
   return visualAttributes;
-}
-
-/**
- * Checks if two CSSStyleDeclarations have the same styles applied.
- */
-function computedStylesEqual(a: CSSStyleDeclaration, b: CSSStyleDeclaration) {
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  for (let i = a.length; i--; ) {
-    const name = a[i];
-
-    if (a[name] !== b[name]) {
-      return false;
-    }
-  }
-
-  return true;
 }
