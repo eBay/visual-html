@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/eBay/visual-html/compare/v2.0.1...v2.0.2) (2019-08-27)
+
+
+### Bug Fixes
+
+* issue with removing attributes from non html elements ([ad05146](https://github.com/eBay/visual-html/commit/ad05146))
+
 ### [2.0.1](https://github.com/eBay/visual-html/compare/v2.0.0...v2.0.1) (2019-08-27)
 
 
