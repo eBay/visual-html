@@ -1,8 +1,8 @@
 import { compare } from "specificity";
 import splitSelectors from "split-selector";
 import { SelectorWithStyles } from "./types";
+import { getDefaultStyles } from "./default-styles";
 const pseudoElementRegex = /::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error)/gi;
-
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
@@ -23,7 +23,9 @@ export function getDocumentStyleRules(document: Document) {
  * properties as an object.
  */
 export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
-  return getAppliedPropertiesForStyles(
+  return getAppliedStylesForElement(
+    el,
+    null,
     [(el as HTMLElement).style].concat(
       rules
         .filter(rule => el.matches(rule.selectorText))
@@ -37,7 +39,10 @@ export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
  * that apply to the element. Returns map containing the list of pseudo elements
  * with their applied css properties.
  */
-export function getPseudoElementStyles(el: Element, rules: SelectorWithStyles[]) {
+export function getPseudoElementStyles(
+  el: Element,
+  rules: SelectorWithStyles[]
+) {
   const stylesByPseudoElement = rules.reduce((rulesByPseudoElement, rule) => {
     const { selectorText, style } = rule;
     let baseSelector = selectorText;
@@ -79,7 +84,9 @@ export function getPseudoElementStyles(el: Element, rules: SelectorWithStyles[])
 
   return foundPseudoElements.reduce(
     (styleByPseudoElement, name) => {
-      styleByPseudoElement[name] = getAppliedPropertiesForStyles(
+      styleByPseudoElement[name] = getAppliedStylesForElement(
+        el,
+        name,
         stylesByPseudoElement[name]
       )!;
       return styleByPseudoElement;
@@ -124,30 +131,41 @@ function getStyleRulesFromSheet(
  * Given a list of css rules (in specificity order) returns the properties
  * applied accounting for !important values.
  */
-function getAppliedPropertiesForStyles(styles: CSSStyleDeclaration[]) {
+function getAppliedStylesForElement(
+  el: Element,
+  pseudo: string | null,
+  styles: CSSStyleDeclaration[]
+) {
   let properties: { [x: string]: string } | null = null;
-  const important = new Set();
+  const defaults = getDefaultStyles(el, pseudo);
+  const seen: Set<string> = new Set();
+  const important: Set<string> = new Set();
 
   for (const style of styles) {
     for (let i = 0, len = style.length; i < len; i++) {
       const name = style[i];
-      const isImportant = style.getPropertyPriority(name) === "important";
-      const value = style[name] + (isImportant ? " !important" : "");
+      const value = style.getPropertyValue(name);
 
-      if (properties) {
-        if (
-          properties[name] === undefined ||
-          (isImportant && !important.has(name))
-        ) {
-          properties[name] = value;
+      if (value !== "initial" && value !== defaults[name]) {
+        const isImportant = style.getPropertyPriority(name) === "important";
+  
+        if (properties) {
+          if (
+            !seen.has(name) ||
+            (isImportant && !important.has(name))
+          ) {
+            properties[name] = value;
+          }
+        } else {
+          properties = { [name]: value };
         }
-      } else {
-        properties = { [name]: value };
+  
+        if (isImportant) {
+          important.add(name);
+        }
       }
 
-      if (isImportant) {
-        important.add(name);
-      }
+      seen.add(name);
     }
   }
 
