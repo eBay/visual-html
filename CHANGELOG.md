@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/eBay/visual-html/compare/v2.0.0...v2.0.1) (2019-08-27)
+
+
+### Bug Fixes
+
+* support for multiple selectors in one rule ([326dc2c](https://github.com/eBay/visual-html/commit/326dc2c))
+
 ## [2.0.0](https://github.com/eBay/visual-html/compare/v1.0.1...v2.0.0) (2019-08-26)
 
 
