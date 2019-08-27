@@ -1,4 +1,4 @@
-import { VisualData, Options } from "./types";
+import { VisualData, Options, SelectorWithStyles } from "./types";
 import { stringifyVisualData } from "./stringify";
 import { getVisualAttributes } from "./attributes";
 import {
@@ -31,7 +31,7 @@ export default function visualHTML(el: Element, options: Options = {}) {
  */
 function getVisualData<T extends Element>(
   el: T,
-  options: Options & { styleRules: CSSStyleRule[] }
+  options: Options & { styleRules: SelectorWithStyles[] }
 ) {
   const window = el.ownerDocument!.defaultView!;
   let childrenVisualData: Array<VisualData | string> | null = null;

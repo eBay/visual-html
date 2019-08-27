@@ -14,3 +14,8 @@ export interface VisualData {
 export interface Options {
   shallow?: boolean;
 }
+
+export interface SelectorWithStyles {
+  selectorText: string;
+  style: CSSStyleDeclaration;
+}

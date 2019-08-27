@@ -125,6 +125,25 @@ test("accounts for applied style specificity", () => {
   ).toMatchInlineSnapshot(`"<div style=\\"color: blue\\"/>"`);
 });
 
+test("accounts for multiple selectors in one rule", () => {
+  expect(
+    testHTML(
+      `
+        <div class="test"/>
+      `,
+      `
+        div, div.test {
+          color: blue;
+        }
+
+        .test {
+          color: green;
+        }
+      `
+    )
+  ).toMatchInlineSnapshot(`"<div style=\\"color: blue\\"/>"`);
+});
+
 test("supports multiple applied styles", () => {
   expect(
     testHTML(

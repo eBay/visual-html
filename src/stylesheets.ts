@@ -1,5 +1,8 @@
 import { compare } from "specificity";
+import splitSelectors from "split-selector";
+import { SelectorWithStyles } from "./types";
 const pseudoElementRegex = /::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error)/gi;
+
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
@@ -19,7 +22,7 @@ export function getDocumentStyleRules(document: Document) {
  * element (including the inline styles) and returns the specified css
  * properties as an object.
  */
-export function getElementStyles(el: Element, rules: CSSStyleRule[]) {
+export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
   return getAppliedPropertiesForStyles(
     [(el as HTMLElement).style].concat(
       rules
@@ -34,7 +37,7 @@ export function getElementStyles(el: Element, rules: CSSStyleRule[]) {
  * that apply to the element. Returns map containing the list of pseudo elements
  * with their applied css properties.
  */
-export function getPseudoElementStyles(el: Element, rules: CSSStyleRule[]) {
+export function getPseudoElementStyles(el: Element, rules: SelectorWithStyles[]) {
   const stylesByPseudoElement = rules.reduce((rulesByPseudoElement, rule) => {
     const { selectorText, style } = rule;
     let baseSelector = selectorText;
@@ -93,13 +96,15 @@ function getStyleRulesFromSheet(
   sheet: CSSStyleSheet | CSSMediaRule | CSSSupportsRule,
   window: Window
 ) {
-  const styleRules: CSSStyleRule[] = [];
+  const styleRules: SelectorWithStyles[] = [];
   const curRules = sheet.cssRules;
   for (let i = curRules.length; i--; ) {
     const rule = curRules[i];
 
     if (isStyleRule(rule)) {
-      styleRules.push(rule);
+      for (const selector of splitSelectors(rule.selectorText) as string[]) {
+        styleRules.push({ selectorText: selector, style: rule.style });
+      }
     } else if (isMediaRule(rule) && window.matchMedia) {
       if (window.matchMedia(rule.media.mediaText).matches) {
         styleRules.push(...getStyleRulesFromSheet(rule, window));

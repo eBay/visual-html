@@ -6,7 +6,8 @@
   "bugs": "https://github.com/eBay/visual-html/issues",
   "dependencies": {
     "indent-string": "^4.0.0",
-    "specificity": "^0.4.1"
+    "specificity": "^0.4.1",
+    "split-selector": "^1.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
