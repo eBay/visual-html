@@ -39,8 +39,8 @@ export function getVisualAttributes(el: Element) {
 
       if (
         !(
-          (el.localName === "a" && /^(?:xmlns:)?href$/i.test(name)) ||
-          /^(?:class|id|style|lang|target|xmlns(?::.+)?|xlink:(?!href).+|xml:(?:lang|base)|on*|aria-*|data-*)$/i.test(
+          (/^(?:xlink:)?href$/i.test(name) && el.localName !== "a" && el.localName !== "use") ||
+          /^(?:class|id|style|lang|target|xmlns(?::.+)?|xlink:.+|xml:(?:lang|base)|on.+|(?:aria|data)-.+)$/i.test(
             name
           )
         )
