@@ -85,8 +85,8 @@ test("accounts for !important", () => {
     )
   ).toMatchInlineSnapshot(`
     "<div style=\\"
-      background: blue !important;
-      color: green !important
+      background: blue;
+      color: green
     \\"/>"
   `);
 });
