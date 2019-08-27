@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/eBay/visual-html/compare/v2.0.2...v2.1.0) (2019-08-27)
+
+
+### Features
+
+* removes applied style properties if they are the default ([8372924](https://github.com/eBay/visual-html/commit/8372924))
+
 ### [2.0.2](https://github.com/eBay/visual-html/compare/v2.0.1...v2.0.2) (2019-08-27)
 
 
