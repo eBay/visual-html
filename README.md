@@ -157,11 +157,11 @@ In the above output you can see that the majority of attributes have been remove
 
 At the end of the day we are trying to test that our components display correctly, and to catch visual regressions, so why not use an image based visual regression tool? These tools require a real browser, and often can be slow and unreliable. Specifically browsers rely heavily on the operating system to render parts of the page such as fonts which can cause slight differences between screenshots taken from your local machine and your CI. You can get around this last part by having a CI or a local docker image but either way your compromising the speed of your tests and development workflow.
 
-With this module we are not rendering actual pixels. Instead it pulls all visual information from the DOM and aggregates it into an HTML snapshot. You can build and compare these text based snapshots during your tests which is quick and repeatable. This can increasing your confidence without slowing down or complicating your work flow.
+With this module we are not rendering actual pixels. Instead it pulls all visual information from the DOM and aggregates it into an HTML snapshot. You can build and compare these text based snapshots during your tests which is quick and repeatable. This allows you to have increased confidence in your tests without slowing down or complicating your work flow.
 
-### inlining styles an snapshoting the element directly?
+### inlining styles and snapshoting the elements HTML directly?
 
-The key with snapshots is to avoid leaking in the implementation details of your tests.
+The key with snapshots is to avoid allowing the implementation details of your tests to leak in.
 Snapshots are easy to update, but if too much is leaking in they can often be hard to review.
 
 In an ideal world a snapshot would automatically include just the critical assertions for what
@@ -214,7 +214,7 @@ test("it is highlighted after the thing", () => {
 ```
 
 With the above you can refactor the way the element is highlighted (different class, inline styles, etc) and as long
-as the element is still ultimately displayed the same, your snapshot will continue to pass.
+as the element is still ultimately displayed the same, your test will continue to pass.
 
 ## Code of Conduct
 
