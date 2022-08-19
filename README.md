@@ -17,12 +17,12 @@
     <img src="https://img.shields.io/badge/styled_with-prettier-ff69b4.svg" alt="Styled with prettier"/>
   </a>
   <!-- CI -->
-  <a href="https://travis-ci.org/eBay/visual-html">
-  <img src="https://img.shields.io/travis/eBay/visual-html.svg" alt="Build status"/>
+  <a href="https://github.com/ebay/visual-html/actions/workflows/ci.yml">
+    <img src="https://github.com/ebay/visual-html/actions/workflows/ci.yml/badge.svg" alt="Build status"/>
   </a>
   <!-- Coverage -->
-  <a href="https://coveralls.io/github/eBay/visual-html">
-    <img src="https://img.shields.io/coveralls/eBay/visual-html.svg" alt="Test Coverage"/>
+  <a href="https://codecov.io/gh/ebay/visual-html">
+    <img src="https://codecov.io/gh/ebay/visual-html/branch/main/graph/badge.svg?token=Sv8ePs16ix" alt="Code Coverage"/>
   </a>
   <!-- NPM Version -->
   <a href="https://npmjs.org/package/visual-html">
