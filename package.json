@@ -5,26 +5,26 @@
   "author": "Dylan Piercey <dpiercey@ebay.com>",
   "bugs": "https://github.com/eBay/visual-html/issues",
   "dependencies": {
-    "indent-string": "^4.0.0",
     "specificity": "^0.4.1",
     "split-selector": "^1.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.1.0",
-    "@commitlint/config-conventional": "^8.1.0",
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.2",
-    "coveralls": "^3.0.6",
-    "husky": "^3.0.4",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.2.3",
-    "prettier": "^1.18.2",
-    "snapshot-diff": "^0.5.2",
-    "standard-version": "^8.0.1",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.18.0",
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/jest": "^28.1.7",
+    "@types/node": "^18.7.7",
+    "coveralls": "^3.1.1",
+    "husky": "^8.0.1",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "snapshot-diff": "^0.9.0",
+    "standard-version": "^9.5.0",
+    "ts-jest": "^28.0.8",
+    "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.7.4"
   },
   "files": [
     "dist"

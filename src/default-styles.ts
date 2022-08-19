@@ -1,4 +1,5 @@
 const cache: { [x: string]: { [x: string]: unknown } } = Object.create(null);
+let supportsPseudoElements: boolean | undefined;
 
 /**
  * Gets the default styles for an element or pseudo element. Works by creating
@@ -19,7 +20,7 @@ export function getDefaultStyles(el: Element, pseudo: string | null) {
     frameDoc.body.appendChild(clone);
 
     cached = cache[key] = cloneStyles(
-      frameWindow.getComputedStyle(clone, pseudo)
+      getComputedStyle(frameWindow, clone, pseudo)
     );
 
     doc.body.removeChild(frame);
@@ -37,4 +38,13 @@ function cloneStyles(styles: CSSStyleDeclaration) {
   }
 
   return result;
+}
+
+function getComputedStyle(window: Window, el: Element, pseudo: string | null) {
+  if (supportsPseudoElements === undefined) {
+    // JSDOM cannot use getComputedStyle for pseudo elements.
+    supportsPseudoElements = !navigator.userAgent.includes("jsdom");
+  }
+
+  return window.getComputedStyle(el, supportsPseudoElements ? pseudo : null);
 }

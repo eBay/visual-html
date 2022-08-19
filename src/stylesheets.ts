@@ -2,7 +2,8 @@ import { compare } from "specificity";
 import splitSelectors from "split-selector";
 import { SelectorWithStyles } from "./types";
 import { getDefaultStyles } from "./default-styles";
-const pseudoElementRegex = /::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error)/gi;
+const pseudoElementRegex =
+  /::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error)/gi;
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
@@ -10,7 +11,7 @@ const pseudoElementRegex = /::?(before|after|first-letter|first-line|selection|b
  */
 export function getDocumentStyleRules(document: Document) {
   return Array.from(document.styleSheets)
-    .map(sheet =>
+    .map((sheet) =>
       getStyleRulesFromSheet(sheet as CSSStyleSheet, document.defaultView!)
     )
     .reduce(flatten, [])
@@ -28,7 +29,7 @@ export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
     null,
     [(el as HTMLElement).style].concat(
       rules
-        .filter(rule => el.matches(rule.selectorText))
+        .filter((rule) => el.matches(rule.selectorText))
         .map(({ style }) => style)
     )
   );
@@ -82,17 +83,14 @@ export function getPseudoElementStyles(
     return null;
   }
 
-  return foundPseudoElements.reduce(
-    (styleByPseudoElement, name) => {
-      styleByPseudoElement[name] = getAppliedStylesForElement(
-        el,
-        name,
-        stylesByPseudoElement[name]
-      )!;
-      return styleByPseudoElement;
-    },
-    {} as { [x: string]: { [x: string]: string } }
-  );
+  return foundPseudoElements.reduce((styleByPseudoElement, name) => {
+    styleByPseudoElement[name] = getAppliedStylesForElement(
+      el,
+      name,
+      stylesByPseudoElement[name]
+    )!;
+    return styleByPseudoElement;
+  }, {} as { [x: string]: { [x: string]: string } });
 }
 
 /**
@@ -117,7 +115,6 @@ function getStyleRulesFromSheet(
         styleRules.push(...getStyleRulesFromSheet(rule, window));
       }
     } else if (isSupportsRule(rule)) {
-      const CSS = (window as any).CSS as CSS;
       if (CSS.supports(rule.conditionText)) {
         styleRules.push(...getStyleRulesFromSheet(rule, window));
       }
@@ -148,18 +145,15 @@ function getAppliedStylesForElement(
 
       if (value !== "initial" && value !== defaults[name]) {
         const isImportant = style.getPropertyPriority(name) === "important";
-  
+
         if (properties) {
-          if (
-            !seen.has(name) ||
-            (isImportant && !important.has(name))
-          ) {
+          if (!seen.has(name) || (isImportant && !important.has(name))) {
             properties[name] = value;
           }
         } else {
           properties = { [name]: value };
         }
-  
+
         if (isImportant) {
           important.add(name);
         }

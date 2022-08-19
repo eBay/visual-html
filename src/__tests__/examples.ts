@@ -104,7 +104,7 @@ function testHTML(html: string, styles: string = "") {
   document.head.appendChild(style);
   document.body.appendChild(div);
   const result = Array.from(div.children)
-    .map(el => visualHTML(el))
+    .map((el) => visualHTML(el))
     .join("\n");
   document.body.removeChild(div);
   document.head.removeChild(style);

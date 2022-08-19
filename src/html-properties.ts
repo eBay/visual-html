@@ -16,17 +16,17 @@ export const HTML_PROPERTIES = {
         "tfoot",
         "th",
         "thead",
-        "tr"
-      ])
-    ]
+        "tr",
+      ]),
+    ],
   },
   autoplay: {
     alias: false,
-    tests: [test(["audio", "video"])]
+    tests: [test(["audio", "video"])],
   },
   background: {
     alias: false,
-    tests: [test(["body", "table", "td", "th"])]
+    tests: [test(["body", "table", "td", "th"])],
   },
   bgColor: {
     alias: "bgcolor",
@@ -40,56 +40,56 @@ export const HTML_PROPERTIES = {
         "tfoot",
         "td",
         "th",
-        "tr"
-      ])
-    ]
+        "tr",
+      ]),
+    ],
   },
   border: {
     alias: false,
-    tests: [test(["img", "object", "table"])]
+    tests: [test(["img", "object", "table"])],
   },
   checked: {
     alias: false,
     tests: [
       test("input", (it: HTMLInputElement) =>
-        /^(?:checkbox|radio)$/.test(it.type))
-    ]
+        /^(?:checkbox|radio)$/.test(it.type)),
+    ],
   },
   color: {
     alias: false,
-    tests: [test(["basefont", "font", "hr"])]
+    tests: [test(["basefont", "font", "hr"])],
   },
   cols: {
     alias: false,
-    tests: [test("textarea")]
+    tests: [test("textarea")],
   },
   colSpan: {
     alias: "colspan",
-    tests: [test(["td", "th"])]
+    tests: [test(["td", "th"])],
   },
   controls: {
     alias: false,
-    tests: [test(["audio", "video"])]
+    tests: [test(["audio", "video"])],
   },
   coords: {
     alias: false,
-    tests: [test("area")]
+    tests: [test("area")],
   },
   currentSrc: {
     alias: "src",
-    tests: [test(["audio", "img", "source", "video"])]
+    tests: [test(["audio", "img", "source", "video"])],
   },
   data: {
     alias: false,
-    tests: [test("object")]
+    tests: [test("object")],
   },
   default: {
     alias: false,
-    tests: [test("track")]
+    tests: [test("track")],
   },
   dir: {
     alias: false,
-    tests: [test(/./)]
+    tests: [test(/./)],
   },
   disabled: {
     alias: false,
@@ -101,137 +101,137 @@ export const HTML_PROPERTIES = {
         "optgroup",
         "option",
         "select",
-        "textarea"
-      ])
-    ]
+        "textarea",
+      ]),
+    ],
   },
   height: {
     alias: false,
     tests: [
-      test(["canvas", "embed", "iframe", "img", "input", "object", "video"])
-    ]
+      test(["canvas", "embed", "iframe", "img", "input", "object", "video"]),
+    ],
   },
   hidden: {
     alias: false,
-    tests: [test(/./)]
+    tests: [test(/./)],
   },
   high: {
     alias: false,
-    tests: [test("meter")]
+    tests: [test("meter")],
   },
   inputMode: {
     alias: "inputmode",
     tests: [
       test("textarea"),
-      test(/./, (it: HTMLElement) => it.isContentEditable)
-    ]
+      test(/./, (it: HTMLElement) => it.isContentEditable),
+    ],
   },
   kind: {
     alias: false,
-    tests: [test("track")]
+    tests: [test("track")],
   },
   label: {
     alias: false,
-    tests: [test(["optgroup", "option", "track"])]
+    tests: [test(["optgroup", "option", "track"])],
   },
   loop: {
     alias: false,
-    tests: [test(["audio", "video"])]
+    tests: [test(["audio", "video"])],
   },
   low: {
     alias: false,
-    tests: [test("meter")]
+    tests: [test("meter")],
   },
   max: {
     alias: false,
-    tests: [test("input", isInputWithBoundaries), test(["meter", "progress"])]
+    tests: [test("input", isInputWithBoundaries), test(["meter", "progress"])],
   },
   maxLength: {
     alias: "maxlength",
-    tests: [test("input", isInputWithPlainText), test("textarea")]
+    tests: [test("input", isInputWithPlainText), test("textarea")],
   },
   minLength: {
     alias: "minlength",
-    tests: [test("input", isInputWithPlainText), test("textarea")]
+    tests: [test("input", isInputWithPlainText), test("textarea")],
   },
   min: {
     alias: false,
-    tests: [test("meter"), test("input", isInputWithBoundaries)]
+    tests: [test("meter"), test("input", isInputWithBoundaries)],
   },
   multiple: {
     alias: false,
     tests: [
       test("input", (it: HTMLInputElement) => it.type === "file"),
-      test("select")
-    ]
+      test("select"),
+    ],
   },
   open: {
     alias: false,
-    tests: [test(["details", "dialog"])]
+    tests: [test(["details", "dialog"])],
   },
   optimum: {
     alias: false,
-    tests: [test("meter")]
+    tests: [test("meter")],
   },
   placeholder: {
     alias: false,
-    tests: [test(["input", "textarea"])]
+    tests: [test(["input", "textarea"])],
   },
   poster: {
     alias: false,
-    tests: [test("video")]
+    tests: [test("video")],
   },
   readOnly: {
     alias: "readonly",
-    tests: [test(["input", "textarea"])]
+    tests: [test(["input", "textarea"])],
   },
   reversed: {
     alias: false,
-    tests: [test("ol")]
+    tests: [test("ol")],
   },
   rows: {
     alias: false,
-    tests: [test("textarea")]
+    tests: [test("textarea")],
   },
   rowSpan: {
     alias: "rowspan",
-    tests: [test(["td", "th"])]
+    tests: [test(["td", "th"])],
   },
   selected: {
     alias: false,
-    tests: [test("option")]
+    tests: [test("option")],
   },
   size: {
     alias: false,
-    tests: [test("input", isInputWithPlainText), test("select")]
+    tests: [test("input", isInputWithPlainText), test("select")],
   },
   span: {
     alias: false,
-    tests: [test(["col", "colgroup"])]
+    tests: [test(["col", "colgroup"])],
   },
   src: {
     alias: false,
-    tests: [test(["embed", "iframe", "track"])]
+    tests: [test(["embed", "iframe", "track"])],
   },
   srcdoc: {
     alias: false,
-    tests: [test("iframe")]
+    tests: [test("iframe")],
   },
   sizes: {
     alias: false,
-    tests: [test(["img", "source"])]
+    tests: [test(["img", "source"])],
   },
   start: {
     alias: false,
-    tests: [test("ol")]
+    tests: [test("ol")],
   },
   title: {
     alias: false,
-    tests: [test("abbr")]
+    tests: [test("abbr")],
   },
   type: {
     alias: false,
-    tests: [test("input"), test("ol")]
+    tests: [test("input"), test("ol")],
   },
   value: {
     alias: false,
@@ -239,19 +239,19 @@ export const HTML_PROPERTIES = {
       test("input", (it: HTMLInputElement) =>
         /^(?!checkbox|radio)$/.test(it.type)),
       test(["meter", "progress"]),
-      test("li", (it: HTMLLIElement) => it.parentElement!.localName === "ol")
-    ]
+      test("li", (it: HTMLLIElement) => it.parentElement!.localName === "ol"),
+    ],
   },
   width: {
     alias: false,
     tests: [
-      test(["canvas", "embed", "iframe", "img", "input", "object", "video"])
-    ]
+      test(["canvas", "embed", "iframe", "img", "input", "object", "video"]),
+    ],
   },
   wrap: {
     alias: false,
-    tests: [test("textarea")]
-  }
+    tests: [test("textarea")],
+  },
 } as const;
 
 function isInputWithBoundaries(input: HTMLInputElement) {

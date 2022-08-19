@@ -2,7 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "es2015", "scripthost"],
     "pretty": true,
-    "target": "es5",
+    "target": "ES2020",
     "outDir": "./dist",
     "sourceMap": true,
     "declaration": true,
