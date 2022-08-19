@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/eBay/visual-html/compare/v2.1.1...v2.1.2) (2022-08-19)
+
+
+### Bug Fixes
+
+* upgrade deps and improve jsdom support ([#21](https://github.com/eBay/visual-html/issues/21)) ([bdee9af](https://github.com/eBay/visual-html/commit/bdee9afd0e664224b8613c5d045ad51d0f2605e4))
+
 ### [2.1.1](https://github.com/eBay/visual-html/compare/v2.1.0...v2.1.1) (2019-08-27)
 
 ## [2.1.0](https://github.com/eBay/visual-html/compare/v2.0.2...v2.1.0) (2019-08-27)
