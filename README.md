@@ -17,12 +17,12 @@
     <img src="https://img.shields.io/badge/styled_with-prettier-ff69b4.svg" alt="Styled with prettier"/>
   </a>
   <!-- CI -->
-  <a href="https://travis-ci.org/eBay/visual-html">
-  <img src="https://img.shields.io/travis/eBay/visual-html.svg" alt="Build status"/>
+  <a href="https://github.com/ebay/visual-html/actions/workflows/ci.yml">
+    <img src="https://github.com/ebay/visual-html/actions/workflows/ci.yml/badge.svg" alt="Build status"/>
   </a>
   <!-- Coverage -->
-  <a href="https://coveralls.io/github/eBay/visual-html">
-    <img src="https://img.shields.io/coveralls/eBay/visual-html.svg" alt="Test Coverage"/>
+  <a href="https://codecov.io/gh/eBay/visual-html" >
+    <img src="https://codecov.io/gh/eBay/visual-html/branch/main/graph/badge.svg?token=g3LEY5qJGW" alt="Code Coverage"/>
   </a>
   <!-- NPM Version -->
   <a href="https://npmjs.org/package/visual-html">
@@ -120,15 +120,15 @@ visualHTML(div); // Returns the html below as string.
 ```
 
 ```html
-<div style="
+<div
+  style="
   background: red;
   height: 200px;
   transform: translateX(-100px);
   width: 100px
-">
-  <span style="color: #333">
-    Hello!
-  </span>
+"
+>
+  <span style="color: #333"> Hello! </span>
   <form>
     <label>
       Username:
@@ -136,15 +136,13 @@ visualHTML(div); // Returns the html below as string.
     </label>
     <label>
       Password:
-      <input type="password"/>
+      <input type="password" />
     </label>
     <label>
       Remember Me:
       <input type="checkbox" />
     </label>
-    <button>
-      Sign in
-    </button>
+    <button>Sign in</button>
   </form>
 </div>
 ```
@@ -221,7 +219,8 @@ as the element is still ultimately displayed the same, your test will continue t
 This project adheres to the [eBay Code of Conduct](http://ebay.github.io/codeofconduct). By participating in this project you agree to abide by its terms.
 
 ## License
-Copyright 2019 eBay Inc. 
+
+Copyright 2019 eBay Inc.
 Author/Developer: Dylan Piercey, Michael Rawlings
 
 Use of this source code is governed by an MIT-style license that can be found in the LICENSE file or at https://opensource.org/licenses/MIT.

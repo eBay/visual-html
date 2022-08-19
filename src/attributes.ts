@@ -15,15 +15,14 @@ export function getVisualAttributes(el: Element) {
     const defaults = el.ownerDocument!.createElement(el.localName);
 
     for (const prop in HTML_PROPERTIES) {
-      const { alias, tests } = HTML_PROPERTIES[
-        prop as keyof typeof HTML_PROPERTIES
-      ];
+      const { alias, tests } =
+        HTML_PROPERTIES[prop as keyof typeof HTML_PROPERTIES];
       const name = alias || prop;
       const value = el[prop];
 
       if (value !== defaults[prop]) {
         for (const test of tests) {
-          if (test(el)) {
+          if (test(el as any)) {
             (visualAttributes || (visualAttributes = [])).push({ name, value });
             break;
           }
@@ -39,7 +38,9 @@ export function getVisualAttributes(el: Element) {
 
       if (
         !(
-          (/^(?:xlink:)?href$/i.test(name) && el.localName !== "a" && el.localName !== "use") ||
+          (/^(?:xlink:)?href$/i.test(name) &&
+            el.localName !== "a" &&
+            el.localName !== "use") ||
           /^(?:class|id|style|lang|target|xmlns(?::.+)?|xlink:.+|xml:(?:lang|base)|on.+|(?:aria|data)-.+)$/i.test(
             name
           )

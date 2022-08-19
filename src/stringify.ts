@@ -1,7 +1,4 @@
-import indent from "indent-string";
 import { VisualData } from "./types";
-
-const indentOptions = { indent: "  " };
 
 /**
  * Given the object representation of the visual data for an element
@@ -20,15 +17,17 @@ export function stringifyVisualData(data: VisualData | string | null) {
   const attrs = printAttributes(data);
   const children = printChildren(data);
 
-  return `<${tagName +
+  return `<${
+    tagName +
     (attrs.length
       ? attrs.length === 1
         ? ` ${attrs[0]}`
-        : `\n${indent(attrs.join("\n"), 1, indentOptions)}\n`
+        : `\n${indent(attrs.join("\n"))}\n`
       : "") +
     (children.length
-      ? `>\n${indent(children.join("\n"), 1, indentOptions)}\n</${tagName}>`
-      : "/>")}`;
+      ? `>\n${indent(children.join("\n"))}\n</${tagName}>`
+      : "/>")
+  }`;
 }
 
 function printAttributes(data: VisualData) {
@@ -75,13 +74,7 @@ function printPseudoElements(data: VisualData) {
 
   return `<style scoped>\n${Object.keys(pseudoStyles)
     .sort()
-    .map(name =>
-      indent(
-        `${name} {${printProperties(pseudoStyles[name])}}`,
-        1,
-        indentOptions
-      )
-    )
+    .map((name) => indent(`${name} {${printProperties(pseudoStyles[name])}}`))
     .join("\n")}\n</style>`;
 }
 
@@ -94,5 +87,9 @@ function printProperties(styles: { [x: string]: string }) {
 
   return parts.length === 1
     ? parts[0]
-    : `\n${indent(parts.sort().join(";\n"), 1, indentOptions)}\n`;
+    : `\n${indent(parts.sort().join(";\n"))}\n`;
+}
+
+function indent(str: string) {
+  return str.replace(/^/gm, "  ");
 }

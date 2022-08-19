@@ -4,7 +4,7 @@ import { getVisualAttributes } from "./attributes";
 import {
   getDocumentStyleRules,
   getElementStyles,
-  getPseudoElementStyles
+  getPseudoElementStyles,
 } from "./stylesheets";
 
 export { VisualData, Options };
@@ -20,7 +20,7 @@ export default function visualHTML(el: Element, options: Options = {}) {
   return stringifyVisualData(
     getVisualData(el, {
       ...options,
-      styleRules: getDocumentStyleRules(el.ownerDocument!)
+      styleRules: getDocumentStyleRules(el.ownerDocument!),
     })
   );
 }
@@ -66,6 +66,6 @@ function getVisualData<T extends Element>(
     styles: getElementStyles(el, options.styleRules),
     pseudoStyles: getPseudoElementStyles(el, options.styleRules),
     attributes: getVisualAttributes(el),
-    children: childrenVisualData
+    children: childrenVisualData,
   } as VisualData;
 }
