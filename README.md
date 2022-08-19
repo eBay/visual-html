@@ -21,8 +21,8 @@
     <img src="https://github.com/ebay/visual-html/actions/workflows/ci.yml/badge.svg" alt="Build status"/>
   </a>
   <!-- Coverage -->
-  <a href="https://codecov.io/gh/ebay/visual-html">
-    <img src="https://codecov.io/gh/ebay/visual-html/branch/main/graph/badge.svg?token=Sv8ePs16ix" alt="Code Coverage"/>
+  <a href="https://codecov.io/gh/eBay/visual-html" >
+    <img src="https://codecov.io/gh/eBay/visual-html/branch/main/graph/badge.svg?token=g3LEY5qJGW" alt="Code Coverage"/>
   </a>
   <!-- NPM Version -->
   <a href="https://npmjs.org/package/visual-html">
