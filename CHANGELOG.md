@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/eBay/visual-html/compare/v2.1.2...v2.1.3) (2025-05-23)
+
+
+### Bug Fixes
+
+* **split-selectors:** updated to match latest CSS spec. Also updated specificity package ([#27](https://github.com/eBay/visual-html/issues/27)) ([e155bdf](https://github.com/eBay/visual-html/commit/e155bdf3633b319fa210b2f2b582e2408e043858))
+
 ### [2.1.2](https://github.com/eBay/visual-html/compare/v2.1.1...v2.1.2) (2022-08-19)
 
 
