@@ -5,8 +5,7 @@
   "author": "Dylan Piercey <dpiercey@ebay.com>",
   "bugs": "https://github.com/eBay/visual-html/issues",
   "dependencies": {
-    "specificity": "^0.4.1",
-    "split-selector": "^1.0.0"
+    "specificity": "^1.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",

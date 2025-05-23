@@ -1,5 +1,5 @@
-import { compare } from "specificity";
-import splitSelectors from "split-selector";
+import { compare, calculate } from "specificity";
+import splitSelectors from "./split-selector";
 import { SelectorWithStyles } from "./types";
 import { getDefaultStyles } from "./default-styles";
 const pseudoElementRegex =
@@ -15,7 +15,9 @@ export function getDocumentStyleRules(document: Document) {
       getStyleRulesFromSheet(sheet as CSSStyleSheet, document.defaultView!)
     )
     .reduce(flatten, [])
-    .sort((a, b) => compare(b.selectorText, a.selectorText));
+    .sort((a, b) =>
+      compare(calculate(b.selectorText), calculate(a.selectorText))
+    );
 }
 
 /**
