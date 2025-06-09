@@ -140,10 +140,19 @@ function getAppliedStylesForElement(
 
   for (const style of styles) {
     for (let i = 0, len = style.length; i < len; i++) {
-      const name = style[i];
-      const value = style.getPropertyValue(name);
+      let name = style[i];
+      let value = style.getPropertyValue(name);
+      while(value === "") {
+        const dashIndex = name.lastIndexOf("-");
+        if (dashIndex !== -1) {
+          name = name.slice(0, dashIndex);
+          value = style.getPropertyValue(name);
+        } else {
+          break;
+        }
+      }
 
-      if (value !== "initial" && value !== defaults[name]) {
+      if (value !== "initial" && value !== "" && value !== defaults[name]) {
         const isImportant = style.getPropertyPriority(name) === "important";
 
         if (properties) {
