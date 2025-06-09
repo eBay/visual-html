@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.4](https://github.com/eBay/visual-html/compare/v2.1.3...v2.1.4) (2025-06-09)
+
+
+### Bug Fixes
+
+* **stylesheets:** added a check in case the styles are empty so they are not added ([#28](https://github.com/eBay/visual-html/issues/28)) ([df89f9e](https://github.com/eBay/visual-html/commit/df89f9e72d00fe768a3cff834ddf95faa067e0de))
+
 ### [2.1.3](https://github.com/eBay/visual-html/compare/v2.1.2...v2.1.3) (2025-05-23)
 
 
