@@ -144,7 +144,7 @@ function getAppliedStylesForElement(
     for (let i = 0, len = style.length; i < len; i++) {
       let name = style[i];
       let value = style.getPropertyValue(name);
-      while(value === "") {
+      while (value === "") {
         const dashIndex = name.lastIndexOf("-");
         if (dashIndex !== -1) {
           name = name.slice(0, dashIndex);
