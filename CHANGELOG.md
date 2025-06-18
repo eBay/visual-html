@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.7](https://github.com/eBay/visual-html/compare/v2.1.6...v2.1.7) (2025-06-18)
+
+
+### Bug Fixes
+
+* more fixes to psuedo element logic ([1b0f2a4](https://github.com/eBay/visual-html/commit/1b0f2a45410c4e6314626206d2e20eab17a3a9df))
+
 ### [2.1.6](https://github.com/eBay/visual-html/compare/v2.1.5...v2.1.6) (2025-06-18)
 
 
