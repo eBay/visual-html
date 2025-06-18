@@ -1,7 +1,7 @@
 {
   "name": "visual-html",
   "description": "Visual regression testing without the flakiness.",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "author": "Dylan Piercey <dpiercey@ebay.com>",
   "bugs": "https://github.com/eBay/visual-html/issues",
   "dependencies": {

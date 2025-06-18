@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.6](https://github.com/eBay/visual-html/compare/v2.1.5...v2.1.6) (2025-06-18)
+
+
+### Bug Fixes
+
+* add missing psuedo element combinator ([9259b8e](https://github.com/eBay/visual-html/commit/9259b8ebf854fe647f3d0f62ada84a3e19ede247))
+
 ### [2.1.5](https://github.com/eBay/visual-html/compare/v2.1.4...v2.1.5) (2025-06-18)
 
 
