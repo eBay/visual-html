@@ -3,7 +3,7 @@ import splitSelectors from "./split-selector";
 import { SelectorWithStyles } from "./types";
 import { getDefaultStyles } from "./default-styles";
 const pseudoElementRegex =
-  /([>~|+\s])?\s*::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error|target(?:-text)?)/gi;
+  /([(>~|+\s])?\s*::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error|target(?:-text)?)/gi;
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
