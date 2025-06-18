@@ -3,7 +3,7 @@ import splitSelectors from "./split-selector";
 import { SelectorWithStyles } from "./types";
 import { getDefaultStyles } from "./default-styles";
 const pseudoElementRegex =
-  /::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error)/gi;
+  /([>~|+\s])?\s*::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error|target(?:-text)?)/gi;
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
@@ -52,8 +52,9 @@ export function getPseudoElementStyles(
     let match: RegExpExecArray | null = null;
     let seenPseudos: string[] | null = null;
 
-    while ((match = pseudoElementRegex.exec(selectorText))) {
-      const name = `::${match[1]}`;
+    while ((match = pseudoElementRegex.exec(baseSelector))) {
+      const name = `::${match[2]}`;
+      const childCombinator = match[1];
 
       if (seenPseudos) {
         if (!seenPseudos.includes(name)) {
@@ -64,8 +65,8 @@ export function getPseudoElementStyles(
       }
 
       baseSelector =
-        selectorText.slice(0, match.index) +
-        selectorText.slice(match.index + match[0].length);
+        baseSelector.slice(0, match.index) + (childCombinator || "");
+      baseSelector.slice(match.index + match[0].length);
     }
 
     if (seenPseudos && el.matches(baseSelector || "*")) {
@@ -79,20 +80,23 @@ export function getPseudoElementStyles(
     return rulesByPseudoElement;
   }, {});
 
-  const foundPseudoElements = Object.keys(stylesByPseudoElement);
+  let appliedPseudoElementStyles: null | {
+    [name: string]: { [property: string]: string };
+  } = null;
 
-  if (!foundPseudoElements.length) {
-    return null;
-  }
-
-  return foundPseudoElements.reduce((styleByPseudoElement, name) => {
-    styleByPseudoElement[name] = getAppliedStylesForElement(
+  for (const name in stylesByPseudoElement) {
+    const styles = getAppliedStylesForElement(
       el,
       name,
       stylesByPseudoElement[name]
-    )!;
-    return styleByPseudoElement;
-  }, {} as { [x: string]: { [x: string]: string } });
+    );
+    if (styles) {
+      appliedPseudoElementStyles ||= {};
+      appliedPseudoElementStyles[name] = styles;
+    }
+  }
+
+  return appliedPseudoElementStyles;
 }
 
 /**

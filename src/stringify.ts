@@ -72,10 +72,12 @@ function printPseudoElements(data: VisualData) {
     return "";
   }
 
-  return `<style scoped>\n${Object.keys(pseudoStyles)
+  return `<style>@scope{:scope{\n${Object.keys(pseudoStyles)
     .sort()
-    .map((name) => indent(`${name} {${printProperties(pseudoStyles[name])}}`))
-    .join("\n")}\n</style>`;
+    .map((name) =>
+      indent(`&${name} {${printProperties(pseudoStyles[name])}}`)
+    )
+    .join("\n")}\n}}</style>`;
 }
 
 function printProperties(styles: { [x: string]: string }) {
