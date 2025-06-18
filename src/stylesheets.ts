@@ -3,7 +3,7 @@ import splitSelectors from "./split-selector";
 import { SelectorWithStyles } from "./types";
 import { getDefaultStyles } from "./default-styles";
 const pseudoElementRegex =
-  /([(>~|+\s])?\s*::?(before|after|first-letter|first-line|selection|backdrop|placeholder|marker|spelling-error|grammar-error|target(?:-text)?)/gi;
+  /([(>~|+\s])?\s*::?(before|after|checkmark|details-content|file-selector-button|first-letter|first-line|selection|backdrop|placeholder(?:-shown)|picker-icon|marker|spelling-error|grammar-error|target-text)(?![a-z-])/gi;
 
 /**
  * Given a document, reads all style sheets returns extracts all CSSRules
@@ -64,9 +64,13 @@ export function getPseudoElementStyles(
         seenPseudos = [name];
       }
 
-      baseSelector =
-        baseSelector.slice(0, match.index) + (childCombinator || "");
-      baseSelector.slice(match.index + match[0].length);
+      baseSelector = childCombinator
+        ? baseSelector.slice(0, match.index) +
+          childCombinator +
+          "*" +
+          baseSelector.slice(match.index + match[0].length)
+        : baseSelector.slice(0, match.index) +
+          baseSelector.slice(match.index + match[0].length);
     }
 
     if (seenPseudos && el.matches(baseSelector || "*")) {
