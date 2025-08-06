@@ -307,6 +307,7 @@ test("includes pseudo elements", () => {
       }}</style>
       <span>
         <style>@scope{:scope{
+          &::before {display: block}
           &::selection {background: blue}
         }}</style>
         Content
