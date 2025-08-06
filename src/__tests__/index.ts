@@ -291,7 +291,8 @@ test("includes pseudo elements", () => {
       background: green;
     }
 
-    div ::before {
+    .test ::before {
+      content: "";
       display: block;
     }
   `;
@@ -307,10 +308,50 @@ test("includes pseudo elements", () => {
       }}</style>
       <span>
         <style>@scope{:scope{
+          &::before {
+            content: \\"\\";
+            display: block
+          }
           &::selection {background: blue}
         }}</style>
         Content
       </span>
+    </div>"
+  `);
+});
+
+test("pseudo elements only included when they render", () => {
+  const html = `
+    <div class="test"><div class="other">Content</div></div>
+  `;
+
+  const styles = `
+    .test::before { content: "prefix"; color: blue; }
+    .test::after { content: ""; color: red; }
+    .test::selection { background: yellow; }
+    .test::first-line { font-weight: bold; }
+    
+    .other::before { display: block; }
+    .other::after { content: none; color: red; }
+  `;
+
+  expect(testHTML(html, styles)).toMatchInlineSnapshot(`
+    "<div>
+      <style>@scope{:scope{
+        &::after {
+          color: red;
+          content: \\"\\"
+        }
+        &::before {
+          color: blue;
+          content: \\"prefix\\"
+        }
+        &::first-line {font-weight: bold}
+        &::selection {background: yellow}
+      }}</style>
+      <div>
+        Content
+      </div>
     </div>"
   `);
 });

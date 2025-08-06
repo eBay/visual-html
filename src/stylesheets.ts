@@ -94,13 +94,31 @@ export function getPseudoElementStyles(
       name,
       stylesByPseudoElement[name]
     );
-    if (styles) {
+    if (styles && shouldIncludePseudoElement(name, styles)) {
       appliedPseudoElementStyles ||= {};
       appliedPseudoElementStyles[name] = styles;
     }
   }
 
   return appliedPseudoElementStyles;
+}
+
+function shouldIncludePseudoElement(
+  pseudoName: string,
+  styles: { [property: string]: string }
+): boolean {
+  if (pseudoName !== "::before" && pseudoName !== "::after") {
+    // Other pseudo-elements (::selection, ::first-line, etc.) should always be included.
+    return true;
+  }
+
+  const contentValue = styles.content;
+
+  // Pseudo-element renders if:
+  // - content property exists (not undefined).
+  // - content: "" (empty string).
+  // - content is not "none".
+  return contentValue !== undefined && contentValue !== "none";
 }
 
 /**
