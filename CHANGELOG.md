@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.8](https://github.com/eBay/visual-html/compare/v2.1.7...v2.1.8) (2025-08-11)
+
+
+### Bug Fixes
+
+* only include pseudo elements that render ([#35](https://github.com/eBay/visual-html/issues/35)) ([ac39ea5](https://github.com/eBay/visual-html/commit/ac39ea503d1d14c19d4306f695bdc264efdff797))
+
 ### [2.1.7](https://github.com/eBay/visual-html/compare/v2.1.6...v2.1.7) (2025-06-18)
 
 
