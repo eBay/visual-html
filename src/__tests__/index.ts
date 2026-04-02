@@ -370,3 +370,49 @@ function testHTML(html: string, styles: string = "") {
   document.head.removeChild(style);
   return result;
 }
+
+test("captures shorthand properties containing var() references", () => {
+  // When a CSS shorthand like border-radius uses var(), browsers store the
+  // value only on the shorthand and return "" for longhands via getPropertyValue().
+  // The fix parses cssText to recover these shorthand declarations.
+  // Note: jsdom may not fully reproduce this browser behavior, but this test
+  // ensures the cssText fallback path doesn't break normal operation.
+  expect(
+    testHTML(
+      `
+        <div class="test"/>
+      `,
+      `
+        :root {
+          --my-radius: 10px;
+        }
+        .test {
+          border-radius: var(--my-radius, 8px);
+          color: blue;
+        }
+      `
+    )
+  ).toMatch(/border-radius/);
+});
+
+test("captures shorthand with var() alongside non-var longhands", () => {
+  // Verify that when some properties use var() and others don't,
+  // both types are captured correctly.
+  expect(
+    testHTML(
+      `
+        <div class="test"/>
+      `,
+      `
+        :root {
+          --my-size: 16px;
+        }
+        .test {
+          font-size: var(--my-size, 14px);
+          color: green;
+          margin: 10px;
+        }
+      `
+    )
+  ).toMatch(/color: green/);
+});

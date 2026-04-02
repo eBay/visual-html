@@ -12,11 +12,11 @@ const pseudoElementRegex =
 export function getDocumentStyleRules(document: Document) {
   return Array.from(document.styleSheets)
     .map((sheet) =>
-      getStyleRulesFromSheet(sheet as CSSStyleSheet, document.defaultView!)
+      getStyleRulesFromSheet(sheet as CSSStyleSheet, document.defaultView!),
     )
     .reduce(flatten, [])
     .sort((a, b) =>
-      compare(calculate(b.selectorText), calculate(a.selectorText))
+      compare(calculate(b.selectorText), calculate(a.selectorText)),
     );
 }
 
@@ -32,8 +32,8 @@ export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
     [(el as HTMLElement).style].concat(
       rules
         .filter((rule) => el.matches(rule.selectorText))
-        .map(({ style }) => style)
-    )
+        .map(({ style }) => style),
+    ),
   );
 }
 
@@ -44,7 +44,7 @@ export function getElementStyles(el: Element, rules: SelectorWithStyles[]) {
  */
 export function getPseudoElementStyles(
   el: Element,
-  rules: SelectorWithStyles[]
+  rules: SelectorWithStyles[],
 ) {
   const stylesByPseudoElement = rules.reduce((rulesByPseudoElement, rule) => {
     const { selectorText, style } = rule;
@@ -76,7 +76,7 @@ export function getPseudoElementStyles(
     if (seenPseudos && el.matches(baseSelector || "*")) {
       for (const name of seenPseudos) {
         (rulesByPseudoElement[name] || (rulesByPseudoElement[name] = [])).push(
-          style
+          style,
         );
       }
     }
@@ -92,7 +92,7 @@ export function getPseudoElementStyles(
     const styles = getAppliedStylesForElement(
       el,
       name,
-      stylesByPseudoElement[name]
+      stylesByPseudoElement[name],
     );
     if (styles && shouldIncludePseudoElement(name, styles)) {
       appliedPseudoElementStyles ||= {};
@@ -105,7 +105,7 @@ export function getPseudoElementStyles(
 
 function shouldIncludePseudoElement(
   pseudoName: string,
-  styles: { [property: string]: string }
+  styles: { [property: string]: string },
 ): boolean {
   if (pseudoName !== "::before" && pseudoName !== "::after") {
     // Other pseudo-elements (::selection, ::first-line, etc.) should always be included.
@@ -127,7 +127,7 @@ function shouldIncludePseudoElement(
  */
 function getStyleRulesFromSheet(
   sheet: CSSStyleSheet | CSSMediaRule | CSSSupportsRule,
-  window: Window
+  window: Window,
 ) {
   const styleRules: SelectorWithStyles[] = [];
   const curRules = sheet.cssRules;
@@ -153,13 +153,89 @@ function getStyleRulesFromSheet(
 }
 
 /**
+ * Parses a CSSStyleDeclaration's cssText into an array of {name, value} pairs.
+ * This captures shorthand properties that contain var() references which
+ * browsers cannot expand into longhands at parse time.
+ */
+function parseCssTextDeclarations(
+  style: CSSStyleDeclaration,
+): { name: string; value: string }[] {
+  const results: { name: string; value: string }[] = [];
+  const cssText = style.cssText;
+  if (!cssText) return results;
+
+  let i = 0;
+  const len = cssText.length;
+
+  while (i < len) {
+    // Skip whitespace
+    while (i < len && (cssText[i] === " " || cssText[i] === "\t")) i++;
+
+    // Read property name
+    const nameStart = i;
+    while (
+      i < len &&
+      cssText[i] !== ":" &&
+      cssText[i] !== ";" &&
+      cssText[i] !== " "
+    )
+      i++;
+    const name = cssText.slice(nameStart, i).trim();
+
+    // Skip whitespace
+    while (i < len && (cssText[i] === " " || cssText[i] === "\t")) i++;
+
+    // Expect ':'
+    if (i < len && cssText[i] === ":") {
+      i++;
+    } else {
+      // Malformed or end — skip to next ';'
+      while (i < len && cssText[i] !== ";") i++;
+      if (i < len) i++;
+      continue;
+    }
+
+    // Skip whitespace
+    while (i < len && (cssText[i] === " " || cssText[i] === "\t")) i++;
+
+    // Read value, respecting nested parentheses (e.g. var(--x, calc(100% - 20px)))
+    const valueStart = i;
+    let parenDepth = 0;
+    while (i < len) {
+      const ch = cssText[i];
+      if (ch === "(") {
+        parenDepth++;
+      } else if (ch === ")") {
+        parenDepth--;
+      } else if (ch === ";" && parenDepth === 0) {
+        break;
+      }
+      i++;
+    }
+    const value = cssText.slice(valueStart, i).trim();
+    if (i < len && cssText[i] === ";") i++;
+
+    // Strip !important suffix (priority is handled separately via getPropertyPriority)
+    const cleanValue = value.endsWith("!important")
+      ? value.slice(0, -"!important".length).trim()
+      : value;
+
+    if (name && cleanValue) {
+      results.push({ name, value: cleanValue });
+    }
+  }
+
+  return results;
+}
+
+/**
  * Given a list of css rules (in specificity order) returns the properties
  * applied accounting for !important values.
  */
 function getAppliedStylesForElement(
   el: Element,
   pseudo: string | null,
-  styles: CSSStyleDeclaration[]
+  styles: CSSStyleDeclaration[],
 ) {
   let properties: { [x: string]: string } | null = null;
   const defaults = getDefaultStyles(el, pseudo);
@@ -167,20 +243,20 @@ function getAppliedStylesForElement(
   const important: Set<string> = new Set();
 
   for (const style of styles) {
+    const emptyLonghands: Set<string> = new Set();
+
     for (let i = 0, len = style.length; i < len; i++) {
-      let name = style[i];
-      let value = style.getPropertyValue(name);
-      while (value === "") {
-        const dashIndex = name.lastIndexOf("-");
-        if (dashIndex !== -1) {
-          name = name.slice(0, dashIndex);
-          value = style.getPropertyValue(name);
-        } else {
-          break;
-        }
+      const name = style[i];
+      const value = style.getPropertyValue(name);
+
+      if (value === "") {
+        // Browser listed a longhand but can't resolve it individually —
+        // likely a shorthand with var(). Track it for the cssText fallback.
+        emptyLonghands.add(name);
+        continue;
       }
 
-      if (value !== "initial" && value !== "" && value !== defaults[name]) {
+      if (value !== "initial" && value !== defaults[name]) {
         const isImportant = style.getPropertyPriority(name) === "important";
 
         if (properties) {
@@ -197,6 +273,35 @@ function getAppliedStylesForElement(
       }
 
       seen.add(name);
+    }
+
+    // Second pass: when longhands had empty values, fall back to parsing
+    // cssText to recover shorthand properties containing var() references.
+    if (emptyLonghands.size > 0) {
+      for (const { name, value } of parseCssTextDeclarations(style)) {
+        // Skip properties already handled in the first pass, and skip
+        // longhands that we already know are empty (they're covered by
+        // whatever shorthand we find here).
+        if (emptyLonghands.has(name) || seen.has(name)) continue;
+
+        if (value !== "initial" && value !== "" && value !== defaults[name]) {
+          const isImportant = style.getPropertyPriority(name) === "important";
+
+          if (properties) {
+            if (!seen.has(name) || (isImportant && !important.has(name))) {
+              properties[name] = value;
+            }
+          } else {
+            properties = { [name]: value };
+          }
+
+          if (isImportant) {
+            important.add(name);
+          }
+        }
+
+        seen.add(name);
+      }
     }
   }
 
