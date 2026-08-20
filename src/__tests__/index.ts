@@ -434,3 +434,17 @@ test("includes the candidate list of a responsive image", () => {
     />"
   `);
 });
+
+test("keeps the href that makes an anchor a link", () => {
+  // Without it the anchor loses the user agent's link colour, underline and
+  // pointer cursor.
+  expect(
+    testHTML(`
+      <a href="/somewhere">link</a>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<a href=\\"/somewhere\\">
+      link
+    </a>"
+  `);
+});

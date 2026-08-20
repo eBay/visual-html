@@ -115,6 +115,10 @@ export const HTML_PROPERTIES = {
     alias: false,
     tests: [test("meter")],
   },
+  href: {
+    alias: false,
+    tests: [test(["a", "area"])],
+  },
   inputMode: {
     alias: "inputmode",
     tests: [
@@ -265,6 +269,7 @@ export const DERIVED_PROPERTIES = new Set([
   "background",
   "data",
   "height",
+  "href",
   "poster",
   "src",
   "width",
