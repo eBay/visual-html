@@ -56,12 +56,29 @@ Check out the [tests](./src/__tests__/index.ts) for some examples.
 
 ## API
 
-### `visualHTML(div: Element, options?: { shallow?: boolean })`
+### `visualHTML(div: Element, options?: { shallow?: boolean, styleRules?: SelectorWithStyles[] })`
 
 ```javascript
 visualHTML(document.body); // Returns the visual information of all nested elements in the body.
 visualHTML(document.body, { shallow: true }); // Returns just visual information for the `<body>` element.
 ```
+
+### `getDocumentStyleRules(document: Document)`
+
+Every capture reads and specificity sorts the document's style rules, which is
+the bulk of its work. A suite capturing many elements against the same
+stylesheets can do that once and hand the result to each call:
+
+```javascript
+const styleRules = getDocumentStyleRules(document);
+
+for (const el of elements) {
+  snapshot(visualHTML(el, { styleRules }));
+}
+```
+
+Media conditions are evaluated as the rules are read, so parse again whenever
+the viewport changes.
 
 ## How it works
 

@@ -1,4 +1,4 @@
-import visualHTML from "..";
+import visualHTML, { getDocumentStyleRules } from "..";
 
 const { matchMedia: _matchMedia } = window;
 const { supports: _supports } =
@@ -370,3 +370,19 @@ function testHTML(html: string, styles: string = "") {
   document.head.removeChild(style);
   return result;
 }
+
+test("styles an element from pre-parsed rules after its stylesheet is gone", () => {
+  const style = document.createElement("style");
+  style.innerHTML = ".parsed { color: green; }";
+  document.head.appendChild(style);
+  const div = document.createElement("div");
+  div.className = "parsed";
+  document.body.appendChild(div);
+
+  const styleRules = getDocumentStyleRules(document);
+  document.head.removeChild(style);
+  const result = visualHTML(div, { styleRules });
+  document.body.removeChild(div);
+
+  expect(result).toMatchInlineSnapshot(`"<div style=\\"color: green\\"/>"`);
+});

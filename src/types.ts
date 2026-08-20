@@ -13,6 +13,8 @@ export interface VisualData {
 }
 export interface Options {
   shallow?: boolean;
+  /** Rules from `getDocumentStyleRules`, to reuse across captures. */
+  styleRules?: SelectorWithStyles[];
 }
 
 export interface SelectorWithStyles {
