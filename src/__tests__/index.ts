@@ -448,3 +448,23 @@ test("keeps the href that makes an anchor a link", () => {
     </a>"
   `);
 });
+
+test("quotes attributes so values containing quotes survive parsing", () => {
+  const output = testHTML(
+    `<div class="quoted">text</div>`,
+    `.quoted {
+      background-image: url("cat.png?a=1&b=2");
+      font-family: "Market Sans", Arial;
+      position: absolute;
+    }`
+  );
+
+  const parsed = document.createElement("div");
+  parsed.innerHTML = output;
+  const style = (parsed.firstElementChild as HTMLElement).style;
+
+  expect(style.backgroundImage).toContain("cat.png?a=1&b=2");
+  expect(style.fontFamily).toContain("Market Sans");
+  // Everything after the quoted value used to be lost with the attribute.
+  expect(style.position).toBe("absolute");
+});

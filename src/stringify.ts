@@ -38,7 +38,13 @@ function printAttributes(data: VisualData) {
     for (const { name, value } of attributes) {
       parts.push(
         name +
-          (value === true || value === "" ? "" : `=${JSON.stringify(value)}`)
+          (value === true || value === ""
+            ? ""
+            : `=${
+                typeof value === "string"
+                  ? quoteAttribute(value)
+                  : JSON.stringify(value)
+              }`)
       );
     }
   }
@@ -55,7 +61,19 @@ function printStyle({ styles }: VisualData) {
     return "";
   }
 
-  return `style="${printProperties(styles)}"`;
+  return `style=${quoteAttribute(printProperties(styles))}`;
+}
+
+/**
+ * Quotes a value with a character it does not itself contain, so that markup
+ * holding a url("…") or a quoted font name can still be parsed back.
+ */
+function quoteAttribute(value: string) {
+  const escaped = value.replace(/&/g, "&amp;");
+
+  return escaped.includes('"') && !escaped.includes("'")
+    ? `'${escaped}'`
+    : `"${escaped.replace(/"/g, "&quot;")}"`;
 }
 
 function printChildren(data: VisualData) {
