@@ -468,3 +468,20 @@ test("quotes attributes so values containing quotes survive parsing", () => {
   // Everything after the quoted value used to be lost with the attribute.
   expect(style.position).toBe("absolute");
 });
+
+test("does not reuse defaults across elements with different attributes", () => {
+  // A checkbox is border-box by default where a text input is content-box, so
+  // an input that declares border-box only shows up in one of the two.
+  expect(
+    testHTML(
+      `
+        <input type="checkbox" class="sized"/>
+        <input type="text" class="sized"/>
+      `,
+      `.sized { box-sizing: border-box; }`
+    )
+  ).toMatchInlineSnapshot(`
+    "<input type=\\"checkbox\\"/>
+    <input style=\\"box-sizing: border-box\\"/>"
+  `);
+});

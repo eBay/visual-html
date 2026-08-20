@@ -6,17 +6,27 @@ let supportsPseudoElements: boolean | undefined;
  * an element in an iframe without any styles and reading the default computed styles.
  */
 export function getDefaultStyles(el: Element, pseudo: string | null) {
-  const key = `${el.namespaceURI}:${el.localName}:${pseudo}`;
+  const unstyled = el.cloneNode(false) as Element;
+  unstyled.removeAttribute("style");
+  // User agent styles select on attributes too: a checkbox has none of the
+  // border, padding and background a text input has.
+  const doc = el.ownerDocument!;
+  const key = `${el.namespaceURI}:${unstyled.outerHTML}:${pseudo}:${doc.compatMode}`;
   let cached = cache[key];
 
   if (!cached) {
-    const doc = el.ownerDocument!;
     const frame = doc.createElement("iframe");
     doc.body.appendChild(frame);
     const frameDoc = frame.contentDocument!;
+    // A blank frame is in quirks mode, where an input is border-box rather
+    // than content-box; match the document being captured.
+    if (doc.compatMode === "CSS1Compat") {
+      frameDoc.open();
+      frameDoc.write("<!doctype html>");
+      frameDoc.close();
+    }
     const frameWindow = frameDoc.defaultView!;
-    const clone = frameDoc.importNode(el, false);
-    clone.removeAttribute("style");
+    const clone = frameDoc.importNode(unstyled, false);
     frameDoc.body.appendChild(clone);
 
     cached = cache[key] = cloneStyles(
