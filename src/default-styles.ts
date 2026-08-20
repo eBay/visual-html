@@ -8,9 +8,9 @@ let supportsPseudoElements: boolean | undefined;
 export function getDefaultStyles(el: Element, pseudo: string | null) {
   const unstyled = el.cloneNode(false) as Element;
   unstyled.removeAttribute("style");
+  const doc = el.ownerDocument!;
   // User agent styles select on attributes too: a checkbox has none of the
   // border, padding and background a text input has.
-  const doc = el.ownerDocument!;
   const key = `${el.namespaceURI}:${unstyled.outerHTML}:${pseudo}:${doc.compatMode}`;
   let cached = cache[key];
 
@@ -37,6 +37,24 @@ export function getDefaultStyles(el: Element, pseudo: string | null) {
   }
 
   return cached;
+}
+
+let initialStyles: { [x: string]: unknown } | undefined;
+
+/**
+ * Gets what a declared `initial` resolves to. These belong to CSS rather than
+ * to any element, so one probe answers for every capture.
+ */
+export function getInitialStyles(doc: Document) {
+  if (!initialStyles) {
+    const probe = doc.createElement("div");
+    probe.style.setProperty("all", "initial");
+    doc.body.appendChild(probe);
+    initialStyles = cloneStyles(doc.defaultView!.getComputedStyle(probe));
+    doc.body.removeChild(probe);
+  }
+
+  return initialStyles;
 }
 
 function cloneStyles(styles: CSSStyleDeclaration) {

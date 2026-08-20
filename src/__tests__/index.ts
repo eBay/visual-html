@@ -485,3 +485,14 @@ test("does not reuse defaults across elements with different attributes", () => 
     <input style=\\"box-sizing: border-box\\"/>"
   `);
 });
+
+test("keeps an initial the author wrote", () => {
+  expect(
+    testHTML(
+      `
+        <input type="text" class="reset"/>
+      `,
+      `.reset { background-color: initial; }`
+    )
+  ).toMatchInlineSnapshot(`"<input style=\\"background-color: initial\\"/>"`);
+});
