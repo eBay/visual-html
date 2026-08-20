@@ -75,10 +75,6 @@ export const HTML_PROPERTIES = {
     alias: false,
     tests: [test("area")],
   },
-  currentSrc: {
-    alias: "src",
-    tests: [test(["audio", "img", "source", "video"])],
-  },
   data: {
     alias: false,
     tests: [test("object")],
@@ -211,11 +207,17 @@ export const HTML_PROPERTIES = {
   },
   src: {
     alias: false,
-    tests: [test(["embed", "iframe", "track"])],
+    tests: [
+      test(["audio", "embed", "iframe", "img", "source", "track", "video"]),
+    ],
   },
   srcdoc: {
     alias: false,
     tests: [test("iframe")],
+  },
+  srcset: {
+    alias: false,
+    tests: [test(["img", "source"])],
   },
   sizes: {
     alias: false,
@@ -253,6 +255,20 @@ export const HTML_PROPERTIES = {
     tests: [test("textarea")],
   },
 } as const;
+
+/**
+ * Properties reporting a value the author never wrote: urls resolved against
+ * the document, and the natural size of a media element once it has loaded.
+ * These are read from the content attribute instead.
+ */
+export const DERIVED_PROPERTIES = new Set([
+  "background",
+  "data",
+  "height",
+  "poster",
+  "src",
+  "width",
+]);
 
 function isInputWithBoundaries(input: HTMLInputElement) {
   return /^(?:number|range|date|datetime-local|year|month|week|day|time)$/.test(

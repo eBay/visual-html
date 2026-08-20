@@ -386,3 +386,51 @@ test("styles an element from pre-parsed rules after its stylesheet is gone", () 
 
   expect(result).toMatchInlineSnapshot(`"<div style=\\"color: green\\"/>"`);
 });
+
+test("keeps urls as authored rather than resolved against the document", () => {
+  expect(
+    testHTML(`
+      <video src="./clip.mp4" poster="../posters/clip.png"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<video
+      poster=\\"../posters/clip.png\\"
+      src=\\"./clip.mp4\\"
+    />"
+  `);
+});
+
+test("keeps img dimensions as authored rather than as loaded", () => {
+  expect(
+    testHTML(`
+      <img src="./cat.png" width="100" height="50"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<img
+      height=\\"50\\"
+      src=\\"./cat.png\\"
+      width=\\"100\\"
+    />"
+  `);
+});
+
+test("omits img dimensions when the attributes are absent", () => {
+  expect(
+    testHTML(`
+      <img src="./cat.png"/>
+    `)
+  ).toMatchInlineSnapshot(`"<img src=\\"./cat.png\\"/>"`);
+});
+
+test("includes the candidate list of a responsive image", () => {
+  expect(
+    testHTML(`
+      <img srcset="./cat.png 1x, ./cat@2x.png 2x" sizes="100vw"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<img
+      sizes=\\"100vw\\"
+      srcset=\\"./cat.png 1x, ./cat@2x.png 2x\\"
+    />"
+  `);
+});

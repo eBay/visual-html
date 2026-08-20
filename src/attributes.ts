@@ -1,4 +1,4 @@
-import { HTML_PROPERTIES } from "./html-properties";
+import { DERIVED_PROPERTIES, HTML_PROPERTIES } from "./html-properties";
 
 /**
  * Given an element, returns any attributes that have a cause a visual change.
@@ -18,9 +18,11 @@ export function getVisualAttributes(el: Element) {
       const { alias, tests } =
         HTML_PROPERTIES[prop as keyof typeof HTML_PROPERTIES];
       const name = alias || prop;
-      const value = el[prop];
+      const isDerived = DERIVED_PROPERTIES.has(prop);
+      const value = isDerived ? el.getAttribute(name) : el[prop];
+      const defaultValue = isDerived ? null : defaults[prop];
 
-      if (value !== defaults[prop]) {
+      if (value !== defaultValue) {
         for (const test of tests) {
           if (test(el as any)) {
             (visualAttributes || (visualAttributes = [])).push({ name, value });
