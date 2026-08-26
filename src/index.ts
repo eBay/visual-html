@@ -8,6 +8,7 @@ import {
 } from "./stylesheets";
 
 export { VisualData, Options };
+export { getDocumentStyleRules };
 
 const ELEMENT_TYPE = 1;
 const TEXT_TYPE = 3;
@@ -20,7 +21,8 @@ export default function visualHTML(el: Element, options: Options = {}) {
   return stringifyVisualData(
     getVisualData(el, {
       ...options,
-      styleRules: getDocumentStyleRules(el.ownerDocument!),
+      styleRules:
+        options.styleRules ?? getDocumentStyleRules(el.ownerDocument!),
     })
   );
 }

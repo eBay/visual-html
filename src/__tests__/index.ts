@@ -1,4 +1,4 @@
-import visualHTML from "..";
+import visualHTML, { getDocumentStyleRules } from "..";
 
 const { matchMedia: _matchMedia } = window;
 const { supports: _supports } =
@@ -370,3 +370,129 @@ function testHTML(html: string, styles: string = "") {
   document.head.removeChild(style);
   return result;
 }
+
+test("styles an element from pre-parsed rules after its stylesheet is gone", () => {
+  const style = document.createElement("style");
+  style.innerHTML = ".parsed { color: green; }";
+  document.head.appendChild(style);
+  const div = document.createElement("div");
+  div.className = "parsed";
+  document.body.appendChild(div);
+
+  const styleRules = getDocumentStyleRules(document);
+  document.head.removeChild(style);
+  const result = visualHTML(div, { styleRules });
+  document.body.removeChild(div);
+
+  expect(result).toMatchInlineSnapshot(`"<div style=\\"color: green\\"/>"`);
+});
+
+test("keeps urls as authored rather than resolved against the document", () => {
+  expect(
+    testHTML(`
+      <video src="./clip.mp4" poster="../posters/clip.png"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<video
+      poster=\\"../posters/clip.png\\"
+      src=\\"./clip.mp4\\"
+    />"
+  `);
+});
+
+test("keeps img dimensions as authored rather than as loaded", () => {
+  expect(
+    testHTML(`
+      <img src="./cat.png" width="100" height="50"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<img
+      height=\\"50\\"
+      src=\\"./cat.png\\"
+      width=\\"100\\"
+    />"
+  `);
+});
+
+test("omits img dimensions when the attributes are absent", () => {
+  expect(
+    testHTML(`
+      <img src="./cat.png"/>
+    `)
+  ).toMatchInlineSnapshot(`"<img src=\\"./cat.png\\"/>"`);
+});
+
+test("includes the candidate list of a responsive image", () => {
+  expect(
+    testHTML(`
+      <img srcset="./cat.png 1x, ./cat@2x.png 2x" sizes="100vw"/>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<img
+      sizes=\\"100vw\\"
+      srcset=\\"./cat.png 1x, ./cat@2x.png 2x\\"
+    />"
+  `);
+});
+
+test("keeps the href that makes an anchor a link", () => {
+  // Without it the anchor loses the user agent's link colour, underline and
+  // pointer cursor.
+  expect(
+    testHTML(`
+      <a href="/somewhere">link</a>
+    `)
+  ).toMatchInlineSnapshot(`
+    "<a href=\\"/somewhere\\">
+      link
+    </a>"
+  `);
+});
+
+test("quotes attributes so values containing quotes survive parsing", () => {
+  const output = testHTML(
+    `<div class="quoted">text</div>`,
+    `.quoted {
+      background-image: url("cat.png?a=1&b=2");
+      font-family: "Market Sans", Arial;
+      position: absolute;
+    }`
+  );
+
+  const parsed = document.createElement("div");
+  parsed.innerHTML = output;
+  const style = (parsed.firstElementChild as HTMLElement).style;
+
+  expect(style.backgroundImage).toContain("cat.png?a=1&b=2");
+  expect(style.fontFamily).toContain("Market Sans");
+  // Everything after the quoted value used to be lost with the attribute.
+  expect(style.position).toBe("absolute");
+});
+
+test("does not reuse defaults across elements with different attributes", () => {
+  // A checkbox is border-box by default where a text input is content-box, so
+  // an input that declares border-box only shows up in one of the two.
+  expect(
+    testHTML(
+      `
+        <input type="checkbox" class="sized"/>
+        <input type="text" class="sized"/>
+      `,
+      `.sized { box-sizing: border-box; }`
+    )
+  ).toMatchInlineSnapshot(`
+    "<input type=\\"checkbox\\"/>
+    <input style=\\"box-sizing: border-box\\"/>"
+  `);
+});
+
+test("keeps an initial the author wrote", () => {
+  expect(
+    testHTML(
+      `
+        <input type="text" class="reset"/>
+      `,
+      `.reset { background-color: initial; }`
+    )
+  ).toMatchInlineSnapshot(`"<input style=\\"background-color: initial\\"/>"`);
+});

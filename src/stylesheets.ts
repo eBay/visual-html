@@ -1,7 +1,12 @@
 import { compare, calculate } from "specificity";
 import splitSelectors from "./split-selector";
 import { SelectorWithStyles } from "./types";
-import { getDefaultStyles } from "./default-styles";
+import { getDefaultStyles, getInitialStyles } from "./default-styles";
+import {
+  getShorthandsFor,
+  getWrittenProperties,
+  INHERITED_PROPERTIES,
+} from "./properties";
 const pseudoElementRegex =
   /([(>~|+\s])?\s*::?(before|after|checkmark|details-content|file-selector-button|first-letter|first-line|selection|backdrop|placeholder(?:-shown)|picker-icon|marker|spelling-error|grammar-error|target-text)(?![a-z-])/gi;
 
@@ -153,6 +158,41 @@ function getStyleRulesFromSheet(
 }
 
 /**
+ * Given a style declaration and one of the properties it enumerates, returns
+ * the declaration the author wrote, or null where there is none.
+ */
+function readDeclaration(
+  style: CSSStyleDeclaration,
+  name: string,
+  doc: Document
+): Declaration | null {
+  let value = style.getPropertyValue(name);
+
+  if (value === "") {
+    const shorthand = getShorthandsFor(doc, name).find(
+      (candidate) => style.getPropertyValue(candidate) !== ""
+    );
+    if (!shorthand) {
+      return null;
+    }
+    name = shorthand;
+    value = style.getPropertyValue(shorthand);
+  }
+
+  // An untouched longhand of a shorthand reads as `initial`, as does one an
+  // author wrote; both stand for the initial value.
+  if (value === "initial") {
+    value = (getInitialStyles(doc)[name] as string) || value;
+  }
+
+  return {
+    name,
+    value,
+    important: style.getPropertyPriority(name) === "important",
+  };
+}
+
+/**
  * Given a list of css rules (in specificity order) returns the properties
  * applied accounting for !important values.
  */
@@ -161,42 +201,40 @@ function getAppliedStylesForElement(
   pseudo: string | null,
   styles: CSSStyleDeclaration[]
 ) {
-  let properties: { [x: string]: string } | null = null;
+  const doc = el.ownerDocument!;
   const defaults = getDefaultStyles(el, pseudo);
-  const seen: Set<string> = new Set();
-  const important: Set<string> = new Set();
+  // `padding`, `padding-left` and `padding-inline-start` all write the same
+  // property, so declarations are settled per property rather than per name.
+  const winners = new Map<string, Declaration>();
 
   for (const style of styles) {
+    const writtenHere = new Set<string>();
+
     for (let i = 0, len = style.length; i < len; i++) {
-      let name = style[i];
-      let value = style.getPropertyValue(name);
-      while (value === "") {
-        const dashIndex = name.lastIndexOf("-");
-        if (dashIndex !== -1) {
-          name = name.slice(0, dashIndex);
-          value = style.getPropertyValue(name);
-        } else {
-          break;
-        }
+      const declaration = readDeclaration(style, style[i], doc);
+      if (!declaration) {
+        continue;
       }
 
-      if (value !== "initial" && value !== "" && value !== defaults[name]) {
-        const isImportant = style.getPropertyPriority(name) === "important";
-
-        if (properties) {
-          if (!seen.has(name) || (isImportant && !important.has(name))) {
-            properties[name] = value;
-          }
-        } else {
-          properties = { [name]: value };
-        }
-
-        if (isImportant) {
-          important.add(name);
+      for (const property of getWrittenProperties(el, declaration.name)) {
+        const holder = winners.get(property);
+        if (
+          !holder ||
+          writtenHere.has(property) ||
+          (declaration.important && !holder.important)
+        ) {
+          winners.set(property, declaration);
+          writtenHere.add(property);
         }
       }
+    }
+  }
 
-      seen.add(name);
+  let properties: { [x: string]: string } | null = null;
+  for (const { name, value } of new Set(winners.values())) {
+    if (value !== defaults[name] || INHERITED_PROPERTIES.has(name)) {
+      properties = properties || {};
+      properties[name] = value;
     }
   }
 
@@ -217,4 +255,10 @@ function isSupportsRule(rule: CSSRule): rule is CSSSupportsRule {
 
 function flatten<T extends unknown>(a: T[], b: T[]): T[] {
   return a.concat(b);
+}
+
+interface Declaration {
+  name: string;
+  value: string;
+  important: boolean;
 }
